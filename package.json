@@ -1,0 +1,95 @@
+{
+  "name": "MyAnimationSample",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "fixcode": "eslint --fix .js,.jsx,.ts,.tsx",
+    "deviceList": "xcrun simctl list devices",
+    "setup": "npm i && npx jetify && cd ios && pod install && cd ..",
+    "android": "npx react-native run-android",
+    "ios-11": "npx react-native run-ios --simulator=\"iPhone 11\"",
+    "ios-se": "npx react-native run-ios --simulator=\"iPhone SE (2nd generation)\"",
+    "reset-cache": "npx react-native start --reset-cache"
+  },
+  "dependencies": {
+    "@react-native-community/image-editor": "^2.3.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/bottom-tabs": "^5.11.2",
+    "@react-navigation/core": "^5.14.4",
+    "@react-navigation/drawer": "^5.11.4",
+    "@react-navigation/material-top-tabs": "^5.3.10",
+    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/stack": "^5.12.8",
+    "d3-scale": "^3.0.0",
+    "d3-shape": "^1.3.7",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-reanimated": "2.0.0-rc.0",
+    "react-native-redash": "^16.0.2",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.16.1",
+    "react-native-svg": "^12.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/eslint-config": "^1.1.0",
+    "@react-native-community/eslint-plugin": "^1.1.0",
+    "@types/d3-scale": "^2.1.1",
+    "@types/d3-shape": "^2.0.0",
+    "@types/jest": "^25.2.3",
+    "@types/react-native": "^0.63.2",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "@welldone-software/why-did-you-render": "^4.3.2",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-eslint-comments": "^3.1.2",
+    "eslint-plugin-flowtype": "5.2.0",
+    "eslint-plugin-jest": "24.0.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.7",
+    "eslint-plugin-react-native": "^3.9.1",
+    "husky": "4.3.0",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.3.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "prettier": "^2.1.1",
+    "react-test-renderer": "16.13.1",
+    "typescript": "^3.8.3"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "rnpm": {
+    "assets": [
+      "./app/assets/fonts/"
+    ]
+  }
+}
