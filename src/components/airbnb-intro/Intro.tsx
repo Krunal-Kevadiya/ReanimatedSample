@@ -1,21 +1,18 @@
-import * as React from "react";
-import {
-  Dimensions, StyleSheet, Animated, TouchableWithoutFeedback, View, Text, SafeAreaView,
-} from "react-native";
-import { Svg } from "expo";
-import SVGPath from "art/modes/svg/path";
-import StyleGuide from "./StyleGuide";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Animated, TouchableWithoutFeedback, View, Text, SafeAreaView } from 'react-native';
+import { Svg, Path } from 'react-native-svg';
+import SVGPath from 'art/modes/svg/path';
+import { windowHeight, windowWidth, horizontalScale } from '../../theme';
+import styles from './IntroStyles';
 
-const { width, height } = Dimensions.get("window");
-const { Path } = Svg;
-const radius = 75;
-const xc = width * 3 / 2;
-const yc = height * 3 / 2;
+const radius = horizontalScale(75);
+const xc = (windowWidth * 3) / 2;
+const yc = (windowHeight * 3) / 2;
 const overlay = SVGPath()
   .moveTo(0, 0)
-  .lineTo(width * 3, 0)
-  .lineTo(width * 3, height * 3)
-  .lineTo(0, height * 3)
+  .lineTo(windowWidth * 3, 0)
+  .lineTo(windowWidth * 3, windowHeight * 3)
+  .lineTo(0, windowHeight * 3)
   .lineTo(0, 0)
   .close()
 
@@ -35,113 +32,71 @@ interface IntroProps {
   steps: Step[];
 }
 
-interface IntroState {
-  index: number
-}
-
-export default class Intro extends React.PureComponent<IntroProps, IntroState> {
-  x = new Animated.Value(0);
-
-  y = new Animated.Value(0);
-
-  state = {
-    index: -1,
-  };
-
-  componentDidMount() {
-    this.nextStep();
+const nextStep = (x, y, steps, index, setIndex): void => {
+  if (index + 1 >= steps.length) {
+    setIndex(-1);
+  } else {
+    setIndex(index + 1);
+    const step = steps[index + 1];
+    Animated.parallel([
+      Animated.timing(x.current, {
+        toValue: step.x,
+        duration: 300,
+        useNativeDriver: true
+      }),
+      Animated.timing(y.current, {
+        toValue: step.y,
+        duration: 300,
+        useNativeDriver: true
+      })
+    ]).start();
   }
+};
 
-  nextStep = () => {
-    const { x, y } = this;
-    const { steps } = this.props;
-    const { index } = this.state;
-    if (index + 1 >= steps.length) {
-      this.setState({ index: -1 });
-    } else {
-      this.setState({ index: index + 1 });
-      const step = steps[index + 1];
-      Animated.parallel([
-        Animated.timing(x, {
-          toValue: step.x,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(y, {
-          toValue: step.y,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
+export default ({ steps }: IntroProps): React.ReactElement => {
+  const x = useRef(new Animated.Value(0));
+  const y = useRef(new Animated.Value(0));
+  const [index, setIndex] = useState(-1);
+
+  const onPressHandle = useCallback(() => {
+    nextStep(x, y, steps, index, setIndex);
+  }, [index, steps, x, y]);
+
+  useEffect(() => {
+    nextStep(x, y, steps, index, setIndex);
+  }, []);
+
+  const step = steps[index];
+  const translateX = Animated.add(x.current, new Animated.Value(-windowWidth / 2 + radius));
+  const translateY = Animated.add(y.current, new Animated.Value(-windowHeight / 2 + radius));
+
+  if (index === -1) {
+    return null;
   }
-
-  render() {
-    const { x, y } = this;
-    const { steps } = this.props;
-    const { index } = this.state;
-    const step = steps[index];
-    const translateX = Animated.add(x, new Animated.Value(-width / 2 + radius));
-    const translateY = Animated.add(y, new Animated.Value(-height / 2 + radius));
-    if (index === -1) {
-      return null;
-    }
-    return (
-      <>
-        <Animated.View
-          style={[styles.container, {
-            transform: [
-              { translateX },
-              { translateY },
-            ],
-          }]}
-        >
-          <Svg style={StyleSheet.absoluteFill}>
-            <Path
-              d={overlay.toSVG()}
-              fill="#00A699"
-              opacity={0.85}
-            />
-          </Svg>
-        </Animated.View>
-        <View style={styles.content}>
-          <SafeAreaView>
-            <Text style={styles.label}>{step.label}</Text>
-            <TouchableWithoutFeedback onPress={this.nextStep}>
-              <View style={styles.button}>
-                <Text style={styles.label}>Next</Text>
-              </View>
-            </TouchableWithoutFeedback>
-          </SafeAreaView>
-        </View>
-      </>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: -height,
-    left: -width,
-    width: width * 3,
-    height: height * 3,
-  },
-  content: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-    padding: StyleGuide.spacing.large,
-  },
-  button: {
-    borderWidth: 2,
-    borderColor: "white",
-    borderRadius: 5,
-    padding: StyleGuide.spacing.tiny,
-    marginTop: StyleGuide.spacing.base,
-  },
-  label: {
-    color: "white",
-    textAlign: "center",
-    ...StyleGuide.typography.title3,
-  },
-});
+  return (
+    <>
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            transform: [{ translateX }, { translateY }]
+          }
+        ]}
+      >
+        <Svg style={StyleSheet.absoluteFill}>
+          <Path d={overlay.toSVG()} fill="#00A699" opacity={0.85} />
+        </Svg>
+      </Animated.View>
+      <View style={styles.content}>
+        <SafeAreaView>
+          <Text style={styles.label}>{step.label}</Text>
+          <TouchableWithoutFeedback onPress={onPressHandle}>
+            <View style={styles.button}>
+              <Text style={styles.label}>Next</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </SafeAreaView>
+      </View>
+    </>
+  );
+};

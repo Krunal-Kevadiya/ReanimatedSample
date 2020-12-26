@@ -1,91 +1,107 @@
-import * as React from "react";
-import {
-  View, Text, StyleSheet, ScrollView, SafeAreaView, InteractionManager,
-} from "react-native";
+import React, { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef } from 'react';
+import { View, Text, ScrollView, SafeAreaView } from 'react-native';
 
-import Category from "./Category";
-import CityCard from "./CityCard";
-import HomeCard, { Home } from "./HomeCard";
-import StyleGuide from "./StyleGuide";
+import Category from './Category';
+import CityCard from './CityCard';
+import HomeCard, { Home } from './HomeCard';
+import styles from './HomeStyles';
+import { Images } from '../../theme';
+const {
+  homes,
+  experiences,
+  restaurants,
+  capeTown,
+  london,
+  losAngeles,
+  miami,
+  nairobi,
+  paris,
+  sanFrancisco,
+  tokyo
+} = Images;
 
-import {
-  Homes, Experiences, Restaurants, CapeTown, London, LosAngeles, Miami, Nairobi, Paris, SanFrancisco, Tokyo,
-} from "./Images";
-
-const homes: [Home, Home] = [
+const home: [Home, Home] = [
   {
-    category1: "Entire apartment",
-    category2: "1 bedroom",
-    title: "Centric studio with roof top terrace",
+    category1: 'Entire apartment',
+    category2: '1 bedroom',
+    title: 'Centric studio with roof top terrace',
     price: {
       amount: 85,
-      currency: "CHF",
+      currency: 'CHF'
     },
-    // eslint-disable-next-line max-len
-    picture: "https://firebasestorage.googleapis.com/v0/b/react-native-ting.appspot.com/o/homes%2F19115781%2Fb16db24e-d530-4601-8ac1-9af91e8c06fc.jpg?alt=media&token=46c15767-8008-4e64-bfef-92865faab2c2",
+    picture:
+      'https://firebasestorage.googleapis.com/v0/b/react-native-ting.appspot.com/o/homes%2F19115781%2Fb16db24e-d530-4601-8ac1-9af91e8c06fc.jpg?alt=media&token=46c15767-8008-4e64-bfef-92865faab2c2'
   },
   {
-    category1: "Entire apartment",
-    category2: "1 bedroom",
-    title: "Great studio in Zurich center",
+    category1: 'Entire apartment',
+    category2: '1 bedroom',
+    title: 'Great studio in Zurich center',
     price: {
       amount: 52,
-      currency: "CHF",
+      currency: 'CHF'
     },
-    // eslint-disable-next-line max-len
-    picture: "https://firebasestorage.googleapis.com/v0/b/react-native-ting.appspot.com/o/homes%2F10055779%2F4d82a918-3a61-4da2-965d-e33b76d891f6.jpg?alt=media&token=115f1f99-7dc5-4942-9a60-7d342aae2435",
-  },
+    picture:
+      'https://firebasestorage.googleapis.com/v0/b/react-native-ting.appspot.com/o/homes%2F10055779%2F4d82a918-3a61-4da2-965d-e33b76d891f6.jpg?alt=media&token=115f1f99-7dc5-4942-9a60-7d342aae2435'
+  }
 ];
 
 interface ExploreProps {
   onLoad: () => void;
 }
 
-// eslint-disable-next-line react/prefer-stateless-function
-export default class Explore extends React.PureComponent<ExploreProps> {
-  explore = React.createRef();
+export default forwardRef(
+  ({ onLoad }: ExploreProps, ref): React.ReactElement => {
+    const explore = useRef();
+    const city = useRef();
+    const cities = useRef();
 
-  city = React.createRef();
+    useImperativeHandle(ref, () => ({
+      get explore(): MutableRefObject<undefined> {
+        return explore;
+      },
+      get city(): MutableRefObject<undefined> {
+        return city;
+      },
+      get cities(): MutableRefObject<undefined> {
+        return cities;
+      }
+    }));
 
-  cities = React.createRef();
+    useEffect(() => {
+      setTimeout(onLoad, 1000);
+    }, [onLoad]);
 
-  componentDidMount() {
-    const { onLoad } = this.props;
-    setTimeout(onLoad, 1000);
-  }
-
-  render() {
     return (
       <ScrollView>
         <SafeAreaView>
           <View>
-            <Text style={styles.title1} ref={this.explore}>Explore</Text>
+            <Text style={styles.title1} ref={explore}>
+              Explore
+            </Text>
             <ScrollView horizontal style={styles.scrollView} contentContainerStyle={styles.container}>
-              <Category label="Homes" image={Homes} />
-              <Category label="Experiences" image={Experiences} />
-              <Category label="Restaurants" image={Restaurants} />
+              <Category label="Homes" image={homes} />
+              <Category label="Experiences" image={experiences} />
+              <Category label="Restaurants" image={restaurants} />
             </ScrollView>
             <View>
-              <Text style={styles.title2} ref={this.city}>Zürich</Text>
-              <ScrollView
-                horizontal
-                style={styles.scrollView}
-                contentContainerStyle={styles.container}
-              >
-                <HomeCard home={homes[0]} />
-                <HomeCard home={homes[1]} />
+              <Text style={styles.title2} ref={city}>
+                Zürich
+              </Text>
+              <ScrollView horizontal style={styles.scrollView} contentContainerStyle={styles.container}>
+                <HomeCard home={home[0]} />
+                <HomeCard home={home[1]} />
               </ScrollView>
             </View>
-            <View ref={this.cities}>
+            <View ref={cities}>
               <ScrollView horizontal style={styles.scrollView} contentContainerStyle={styles.container}>
-                <CityCard label="Cape Town" image={CapeTown} />
-                <CityCard label="London" image={London} />
-                <CityCard label="Los Angeles" image={LosAngeles} />
-                <CityCard label="Miami" image={Miami} />
-                <CityCard label="Nairobi" image={Nairobi} />
-                <CityCard label="Paris" image={Paris} />
-                <CityCard label="San Francisco" image={SanFrancisco} />
-                <CityCard label="Tokyo" image={Tokyo} />
+                <CityCard label="Cape Town" image={capeTown} />
+                <CityCard label="London" image={london} />
+                <CityCard label="Los Angeles" image={losAngeles} />
+                <CityCard label="Miami" image={miami} />
+                <CityCard label="Nairobi" image={nairobi} />
+                <CityCard label="Paris" image={paris} />
+                <CityCard label="San Francisco" image={sanFrancisco} />
+                <CityCard label="Tokyo" image={tokyo} />
               </ScrollView>
             </View>
           </View>
@@ -93,23 +109,4 @@ export default class Explore extends React.PureComponent<ExploreProps> {
       </ScrollView>
     );
   }
-}
-
-
-const styles = StyleSheet.create({
-  title1: {
-    ...StyleGuide.typography.title1,
-    paddingLeft: StyleGuide.spacing.base,
-  },
-  title2: {
-    ...StyleGuide.typography.title2,
-    paddingLeft: StyleGuide.spacing.base,
-  },
-  scrollView: {
-    paddingHorizontal: StyleGuide.spacing.base,
-    marginBottom: StyleGuide.spacing.base,
-  },
-  container: {
-    paddingRight: StyleGuide.spacing.base,
-  },
-});
+);

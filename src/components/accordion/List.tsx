@@ -40,7 +40,7 @@ export default ({ list }: ListProps): React.ReactElement => {
   return (
     <>
       <TouchableWithoutFeedback
-        onPress={() => {
+        onPress={(): void => {
           if (height.value === 0) {
             runOnUI(() => {
               'worklet';

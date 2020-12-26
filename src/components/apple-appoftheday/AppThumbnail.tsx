@@ -1,12 +1,10 @@
-import * as React from "react";
-import {
-  View, StyleSheet, Text, Platform, Image,
-} from "react-native";
-import { Constants, DangerZone } from "expo";
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import Animated from 'react-native-reanimated';
+import styles from './AppThumbnailStyles';
+import { App } from './Model';
+import { isAndroid, isIos } from '../../theme';
 
-import { App } from "./Model";
-
-const { Animated } = DangerZone;
 const { Value } = Animated;
 
 interface AppThumbnailProps {
@@ -14,51 +12,13 @@ interface AppThumbnailProps {
   borderRadius?: typeof Value;
 }
 
-export default ({ app: { source, title, subtitle }, borderRadius }: AppThumbnailProps) => (
+export default ({ app: { source, title, subtitle }, borderRadius }: AppThumbnailProps): React.ReactElement => (
   <>
-    {
-      Platform.OS === "android" && (
-        <Image
-          style={styles.image}
-          {...{ source }}
-        />
-      )
-    }
-    {
-      Platform.OS === "ios" && (
-        <Animated.Image
-          style={[styles.image, { borderRadius: borderRadius || 8 }]}
-          {...{ source }}
-        />
-      )
-    }
+    {isAndroid && <Image style={styles.image} {...{ source }} />}
+    {isIos && <Animated.Image style={[styles.image, { borderRadius: borderRadius || 8 }]} {...{ source }} />}
     <View style={styles.content}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
     </View>
   </>
 );
-
-const styles = StyleSheet.create({
-  content: {
-    ...StyleSheet.absoluteFillObject,
-    padding: 16,
-    paddingTop: Constants.statusBarHeight,
-    justifyContent: "space-between",
-  },
-  title: {
-    color: "white",
-    fontSize: 34,
-    lineHeight: 41,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    color: "white",
-    fontSize: 18,
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    width: undefined,
-    height: undefined,
-  },
-});

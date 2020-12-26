@@ -23,6 +23,7 @@ import DonutSample from './z-animation/DonutSample';
 import LogoSample from './z-animation/LogoSample';
 //Part-2
 import Part2Sample from './part-2/Part2Sample';
+import AirbnbIntroSample from './airbnb-intro/AirbnbIntroSample';
 export {
   BonusesSample,
   ProgressSample,
@@ -48,5 +49,6 @@ export {
   DonutSample,
   LogoSample,
   //Part-2
-  Part2Sample
+  Part2Sample,
+  AirbnbIntroSample
 };

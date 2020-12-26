@@ -1,8 +1,7 @@
-import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Feather as Icon } from "@expo/vector-icons";
-
-import StyleGuide from "./StyleGuide";
+import React from 'react';
+import { View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import styles from './TabIconStyles';
 
 interface TabIconProps {
   label: string;
@@ -10,31 +9,12 @@ interface TabIconProps {
   active?: boolean;
 }
 
-export default class TabIcon extends React.PureComponent<TabIconProps> {
-  static defaultProps = {
-    active: false,
-  };
-
-  render() {
-    const { label, icon, active } = this.props;
-    const color = active ? "#f7555c" : "black";
-    return (
-      <View style={styles.container}>
-        <Icon name={icon} {...{ color }} size={25} />
-        <Text style={[styles.label, { color }]}>{label.toUpperCase()}</Text>
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  label: {
-    ...StyleGuide.typography.micro,
-    marginTop: StyleGuide.spacing.tiny,
-  },
-});
+export default ({ label, icon, active = false }: TabIconProps): React.ReactElement => {
+  const color = active ? '#f7555c' : 'black';
+  return (
+    <View style={styles.container}>
+      <Icon name={icon} {...{ color }} size={25} />
+      <Text style={[styles.label, { color }]}>{label.toUpperCase()}</Text>
+    </View>
+  );
+};

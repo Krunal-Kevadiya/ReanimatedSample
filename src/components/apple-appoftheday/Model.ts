@@ -1,4 +1,4 @@
-import { ImageRequireSource } from "react-native";
+import { ImageRequireSource } from 'react-native';
 
 export interface App {
   id: number;

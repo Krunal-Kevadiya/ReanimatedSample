@@ -6,7 +6,7 @@ import { AppNavigatorParams } from './AppNavigator';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   Part2Sample,
-  WorkletsSample,
+  AirbnbIntroSample,
 } from '../modules';
 
 export type Part2NavigatorParams = AppNavigatorParams & {
@@ -30,9 +30,9 @@ export const Part2Navigator = (): React.ReactElement => (
     />
     <Stack.Screen
       name={Part2Route.AIRBNB_INTRO}
-      component={WorkletsSample}
+      component={AirbnbIntroSample}
       options={{
-        title: 'Worklets'
+        title: 'Airbnb Intro'
       }}
     />
   </Stack.Navigator>
